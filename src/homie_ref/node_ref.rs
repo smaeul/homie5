@@ -36,9 +36,9 @@ pub struct NodeRef {
 
 impl NodeRef {
     /// Create a new NodeRef from a given homie_domain, device id, and node id
-    pub fn new(homie_domain: HomieDomain, device_i: HomieID, node_id: HomieID) -> Self {
+    pub fn new(homie_domain: HomieDomain, device_id: HomieID, node_id: HomieID) -> Self {
         Self {
-            device: DeviceRef::new(homie_domain, device_i),
+            device: DeviceRef::new(homie_domain, device_id),
             id: node_id,
         }
     }

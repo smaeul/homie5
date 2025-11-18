@@ -34,7 +34,7 @@ where
     fn homie_id(&self) -> &HomieID;
     fn description(&self) -> &HomieDeviceDescription;
     fn client(&self) -> &C;
-    fn protcol(&self) -> &Homie5DeviceProtocol;
+    fn protocol(&self) -> &Homie5DeviceProtocol;
     fn state(&self) -> HomieDeviceStatus;
     fn set_state(&mut self, state: HomieDeviceStatus);
 
@@ -42,27 +42,27 @@ where
     async fn handle_set_command(&mut self, property: &PropertyRef, set_value: &str) -> Result<(), Self::ResultError>;
 
     async fn publish_description(&self) -> Result<(), Self::ResultError> {
-        let p = self.protcol().publish_description(self.description())?;
+        let p = self.protocol().publish_description(self.description())?;
         self.client().homie_publish(p).await?;
         Ok(())
     }
 
     async fn publish_state(&self) -> Result<(), Self::ResultError> {
-        let p = self.protcol().publish_state(self.state());
+        let p = self.protocol().publish_state(self.state());
         self.client().homie_publish(p).await?;
         Ok(())
     }
 
     async fn subscribe_props(&self) -> Result<(), Self::ResultError> {
         self.client()
-            .homie_subscribe(self.protcol().subscribe_props(self.description())?)
+            .homie_subscribe(self.protocol().subscribe_props(self.description())?)
             .await?;
         Ok(())
     }
 
     async fn unsubscribe_props(&self) -> Result<(), Self::ResultError> {
         self.client()
-            .homie_unsubscribe(self.protcol().unsubscribe_props(self.description())?)
+            .homie_unsubscribe(self.protocol().unsubscribe_props(self.description())?)
             .await?;
         Ok(())
     }
@@ -75,7 +75,7 @@ where
         let (value, retained) = self.prepare_publish(property, &value.into())?;
         // publish the value to mqtt
         self.client()
-            .homie_publish(self.protcol().publish_value_for_id(
+            .homie_publish(self.protocol().publish_value_for_id(
                 property.device_id(),
                 property.node_id(),
                 property.prop_id(),
@@ -95,7 +95,7 @@ where
         // publish the value to mqtt
         self.client()
             .homie_publish(
-                self.protcol()
+                self.protocol()
                     .publish_target(property.node_id(), property.prop_id(), &value, retained),
             )
             .await?;
@@ -114,7 +114,7 @@ where
     }
 
     async fn publish_device(&mut self) -> Result<(), Self::ResultError> {
-        log::debug!("[{}] publishing", self.protcol().id());
+        log::debug!("[{}] publishing", self.protocol().id());
 
         for step in homie_device_publish_steps() {
             match step {
@@ -142,7 +142,7 @@ where
 
     #[allow(dead_code)]
     async fn unpublish_device(&self) -> Result<(), Self::ResultError> {
-        let p = self.protcol().remove_device(self.description())?;
+        let p = self.protocol().remove_device(self.description())?;
 
         for entry in p {
             self.client().homie_publish(entry).await?;
@@ -156,7 +156,7 @@ where
     // In case you have only one device override this and include the disconnect of the mqtt client
     // here as well.
     async fn disconnect_device(&mut self) -> Result<(), Self::ResultError> {
-        log::debug!("[{}] disconnect", self.protcol().id());
+        log::debug!("[{}] disconnect", self.protocol().id());
         for step in homie_device_disconnect_steps() {
             match step {
                 homie5::DeviceDisconnectStep::DeviceStateDisconnect => {

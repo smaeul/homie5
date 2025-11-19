@@ -14,6 +14,7 @@ keywords = ["homie", "iot", "mqtt"]
 
 [dependencies]
 chrono = { version = "0.4.38", default-features = false, features = ["alloc", "serde"] }
+defmt = { version = "1.0.1", default-features = false, optional = true }
 foldhash = { version = "0.2.0", default-features = false }
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }

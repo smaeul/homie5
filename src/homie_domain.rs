@@ -70,6 +70,7 @@ impl fmt::Display for InvalidHomieDomainError {
 impl std::error::Error for InvalidHomieDomainError {}
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default, PartialOrd, Ord, serde::Serialize)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct CustomDomain(Cow<'static, str>);
 
 impl CustomDomain {
@@ -164,6 +165,7 @@ impl<'de> serde::Deserialize<'de> for CustomDomain {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default, PartialOrd, Ord)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum HomieDomain {
     #[default]
     Default,

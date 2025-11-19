@@ -182,6 +182,7 @@ impl FromStr for HomieDataType {
 
 /// Reflects the current state of the device.
 #[derive(Serialize, Deserialize, Default, Clone, PartialEq, Eq, Copy)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[serde(rename_all = "lowercase")]
 pub enum HomieDeviceStatus {
     /// this is the state the device is in when it is connected to the MQTT broker, but has not yet sent all Homie messages and is not yet ready to operate. This state is optional and may be sent if the device takes a long time to initialize, but wishes to announce to consumers that it is coming online. A device may fall back into this state to do some reconfiguration.

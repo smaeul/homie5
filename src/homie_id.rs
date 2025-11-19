@@ -89,6 +89,7 @@ impl std::error::Error for InvalidHomieIDError {}
 /// assert_eq!(id.as_str(), "sensor-01");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct HomieID(Cow<'static, str>);
 
 impl HomieID {
